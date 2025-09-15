@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Profile</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+        .profile-container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+        }
+        .profile-info {
+            margin-bottom: 15px;
+        }
+        .profile-info strong {
+            display: inline-block;
+            width: 150px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="profile-container">
+        <h1>Student Profile</h1>
+        <div class="profile-info">
+            <strong>Roll Number:</strong> {{ student['roll_no'] }}
+        </div>
+        <div class="profile-info">
+            <strong>Name:</strong> {{ student['name'] }}
+        </div>
+        <div class="profile-info">
+            <strong>Gender:</strong> {{ student['gender'] }}
+        </div>
+        <div class="profile-info">
+            <strong>Date of Birth:</strong> {{ student['dob'].strftime('%Y-%m-%d') }}
+        </div>
+        <div class="profile-info">
+            <strong>Address:</strong> {{ student['address'] }}
+        </div>
+        <div class="profile-info">
+            <strong>City:</strong> {{ student['city'] }}
+        </div>
+        <div class="profile-info">
+            <strong>Pincode:</strong> {{ student['pincode'] }}
+        </div>
+        <div class="profile-info">
+            <strong>District:</strong> {{ student['district'] }}
+        </div>
+        <div class="profile-info">
+            <strong>Father's Name:</strong> {{ student['father_name'] }}
+        </div>
+        <div class="profile-info">
+            <strong>Mother's Name:</strong> {{ student['mother_name'] }}
+        </div>
+    </div>
+
+</body>
+</html>

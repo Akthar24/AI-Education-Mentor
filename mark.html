@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Student Marks Entry</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+    }
+
+    .container {
+      width: 40%;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0px 0px 10px gray;
+    }
+
+    h2 {
+      text-align: center;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      margin: 10px 0 5px;
+    }
+
+    input, select {
+      padding: 8px;
+      margin-bottom: 15px;
+    }
+
+    button {
+      background: blue;
+      color: white;
+      padding: 10px;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: darkblue;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Student Marks Entry</h2>
+    <form id="marksForm">
+      <label for="studentName">Student Name:</label>
+      <input type="text" id="studentName" name="studentName" required>
+
+      <label for="rollNo">Roll Number:</label>
+      <input type="text" id="rollNo" name="rollNo" required>
+
+      <label for="classSelect">Select Class:</label>
+      <select id="classSelect" name="classSelect" required>
+        <option value="">Select Class</option>
+        <option value="10">10th</option>
+        <option value="11">11th</option>
+        <option value="12">12th</option>
+      </select>
+
+      <div id="groupSection" style="display: none;">
+        <label for="groupSelect">Select Group:</label>
+        <select id="groupSelect" name="groupSelect">
+          <option value="">Select Group</option>
+          <option value="computer">Computer Science</option>
+          <option value="biology">Biology</option>
+          <option value="commerce">Commerce</option>
+          <option value="pure">Pure Science</option>
+        </select>
+      </div>
+
+      <div id="subjectsSection" style="display: none;">
+        <h3>Enter Marks</h3>
+        <div id="subjects"></div>
+      </div>
+
+      <button type="submit">Submit</button>
+    </form>
+  </div>
+
+  <script>
+    const class10Subjects = ["Tamil", "English", "Maths", "Science", "Social Science"];
+    const subjectsMap = {
+      "computer": ["Tamil", "English", "Maths", "Computer Science", "Physics", "Chemistry"],
+      "biology": ["Tamil", "English", "Maths", "Biology", "Physics", "Chemistry"],
+      "commerce": ["Tamil", "English", "Computer Application", "Economics", "Commerce", "Accountancy"],
+      "pure": ["Tamil", "English", "Zoology", "Botany", "Chemistry", "Physics"]
+    };
+
+    document.getElementById("classSelect").addEventListener("change", function () {
+      const classSelected = this.value;
+      const groupSection = document.getElementById("groupSection");
+      const subjectsSection = document.getElementById("subjectsSection");
+      const groupSelect = document.getElementById("groupSelect");
+      const subjectsDiv = document.getElementById("subjects");
+
+      subjectsDiv.innerHTML = "";
+      groupSelect.value = "";
+
+      if (classSelected === "11" || classSelected === "12") {
+        groupSection.style.display = "block";
+        subjectsSection.style.display = "none";
+      } else if (classSelected === "10") {
+        groupSection.style.display = "none";
+        subjectsSection.style.display = "block";
+        class10Subjects.forEach(subject => {
+          subjectsDiv.innerHTML += `<label>${subject}:</label><input type="number" name="marks[${subject}]" required>`;
+        });
+      } else {
+        groupSection.style.display = "none";
+        subjectsSection.style.display = "none";
+      }
+    });
+
+    document.getElementById("groupSelect").addEventListener("change", function () {
+      const groupSelected = this.value;
+      const subjectsSection = document.getElementById("subjectsSection");
+      const subjectsDiv = document.getElementById("subjects");
+
+      subjectsDiv.innerHTML = "";
+
+      if (groupSelected && subjectsMap[groupSelected]) {
+        subjectsSection.style.display = "block";
+        subjectsMap[groupSelected].forEach(subject => {
+          subjectsDiv.innerHTML += `<label>${subject}:</label><input type="number" name="marks[${subject}]" required>`;
+        });
+      } else {
+        subjectsSection.style.display = "none";
+      }
+    });
+
+    document.getElementById("marksForm").addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      const formData = new FormData(this);
+      const studentData = {
+        studentName: formData.get("studentName"),
+        rollNo: formData.get("rollNo"),
+        class: formData.get("classSelect"),
+        group: formData.get("groupSelect") || null,
+        marks: {}
+      };
+
+      for (let [key, value] of formData.entries()) {
+        if (key.startsWith("marks[")) {
+          const subject = key.match(/marks\[(.+?)\]/)[1];
+          studentData.marks[subject] = Number(value);
+        }
+      }
+
+      fetch("http://localhost:5000/api/students", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(studentData)
+      })
+      .then(response => response.json())
+      .then(data => alert("Marks Submitted Successfully!"))
+      .catch(error => {
+        console.error("Error:", error);
+        alert("Failed to submit marks.");
+      });
+    });
+  </script>
+</body>
+</html>

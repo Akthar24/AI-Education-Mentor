@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Learning Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        .dashboard-container {
+            width: 60%;
+            margin: 50px auto;
+            background: white;
+            padding: 20px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .menu {
+            margin: 20px 0;
+        }
+
+        .menu button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+
+        .menu button:hover {
+            background-color: #0056b3;
+        }
+
+        .section {
+            display: none;
+            padding: 20px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        #materials, #tests, #progress {
+            display: none;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        ul li {
+            background: #eee;
+            margin: 10px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        ul li a {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+        }
+
+        ul li a:hover {
+            text-decoration: underline;
+        }
+
+        button {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <h1>Welcome to Your Learning Dashboard</h1>
+        
+        <div class="menu">
+            <button onclick="openSection('materials')">Study Materials</button>
+            <button onclick="openSection('tests')">Take a Test</button>
+            <button onclick="openSection('progress')">Progress Report</button>
+        </div>
+
+        <div id="materials" class="section">
+            <h2>Study Materials</h2>
+            <input type="file" id="uploadMaterial" accept=".pdf,.docx,.ppt" />
+            <button onclick="uploadMaterial()">Upload</button>
+            <ul id="materialsList"></ul>
+        </div>
+
+        <div id="tests" class="section">
+            <h2>Online Test</h2>
+            <input type="file" id="uploadTest" accept=".pdf,.docx" />
+            <button onclick="uploadTest()">Upload</button>
+            <ul id="testsList"></ul>
+        </div>
+
+        <div id="progress" class="section">
+            <h2>Progress Report</h2>
+            <p>Your recent performance and analytics will be displayed here.</p>
+        </div>
+    </div>
+
+    <script>
+        function openSection(sectionId) {
+            let sections = document.querySelectorAll('.section');
+            sections.forEach(section => section.style.display = 'none');
+            document.getElementById(sectionId).style.display = 'block';
+        }
+
+        function uploadMaterial() {
+            let fileInput = document.getElementById("uploadMaterial");
+            let file = fileInput.files[0];
+            if (file) {
+                let list = document.getElementById("materialsList");
+                let listItem = document.createElement("li");
+                let url = URL.createObjectURL(file);
+                listItem.innerHTML = `<a href="${url}" target="_blank">${file.name}</a>`;
+                list.appendChild(listItem);
+                fileInput.value = "";
+            }
+        }
+
+        function uploadTest() {
+            let fileInput = document.getElementById("uploadTest");
+            let file = fileInput.files[0];
+            if (file) {
+                let list = document.getElementById("testsList");
+                let listItem = document.createElement("li");
+                let url = URL.createObjectURL(file);
+                listItem.innerHTML = `<a href="${url}" target="_blank">${file.name}</a>`;
+                list.appendChild(listItem);
+                fileInput.value = "";
+            }
+        }
+    </script>
+</body>
+</html>
